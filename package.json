@@ -21,6 +21,7 @@
     "electron": "^28.1.2"
   },
   "dependencies": {
-    "bluebird": "^3.7.2"
+    "bluebird": "^3.7.2",
+    "webtorrent": "^2.1.32"
   }
 }
