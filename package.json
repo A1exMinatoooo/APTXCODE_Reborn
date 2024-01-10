@@ -1,0 +1,23 @@
+{
+  "name": "aptxcode_reborn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/A1exMinatoooo/APTXCODE_Reborn.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/A1exMinatoooo/APTXCODE_Reborn/issues"
+  },
+  "homepage": "https://github.com/A1exMinatoooo/APTXCODE_Reborn#readme",
+  "devDependencies": {
+    "electron": "^28.1.2"
+  }
+}
