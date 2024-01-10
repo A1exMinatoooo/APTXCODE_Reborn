@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
 const Promise = require('bluebird');
+const WebTorrent = require('webtorrent');
 
 document.addEventListener('DOMContentLoaded', () => {
     const folderPathInput = document.getElementById('folderPath');
@@ -32,8 +33,33 @@ document.addEventListener('DOMContentLoaded', () => {
     async function processFolder(folderPath, chunkSize, template) {
         const files = await readFilesInFolder(folderPath);
         const seedInfo = await generateSeedInfo(files, chunkSize, template);
+        await createTorrent(seedInfo);
         const bbCode = generateBBCode(seedInfo);
         return bbCode;
+    }
+
+    async function createTorrent(seedInfo) {
+        const client = new WebTorrent();
+
+        try {
+            const { chunks, template } = seedInfo;
+            const torrent = await Promise.promisify(client.seed)(chunks.map(chunk => chunk.filePath), {
+                name: 'GeneratedTorrent',
+                announce: ['udp://tracker.openbittorrent.com:80'],
+                private: false,
+            });
+
+            // Save generated torrent file
+            const torrentFilePath = path.join(remote.app.getPath('userData'), 'GeneratedTorrent.torrent');
+            await fs.writeFile(torrentFilePath, torrent.torrentFile);
+
+            seedInfo.torrentFilePath = torrentFilePath;
+            seedInfo.magnetLink = torrent.magentURI;
+
+            client.destroy();
+        } catch (error) {
+            throw new Error(`Error creating torrent: ${error.message}`);
+        }
     }
 
     async function readFilesInFolder(folderPath) {
@@ -75,8 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateBBCode(seedInfo) {
+        const { template, magnetLink, torrentFilePath } = seedInfo;
         // TODO: Implement BBCode generation logic using the seedInfo
         // For now, just return a placeholder BBCode
-        return `Generated BBCode: ${seedInfo.template}`;
+        return `Generated BBCode: [url=${magnetLink}]Magnet Link[/url],[url=${torrentFilePath}]Torrent File[/url]\n${template}`;
     }
 });
