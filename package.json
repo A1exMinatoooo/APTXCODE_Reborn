@@ -19,5 +19,8 @@
   "homepage": "https://github.com/A1exMinatoooo/APTXCODE_Reborn#readme",
   "devDependencies": {
     "electron": "^28.1.2"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2"
   }
 }
